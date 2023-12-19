@@ -17,3 +17,12 @@ model Notification {
   read Boolean @default(false)
   message String
 }
+
+model Subscription {
+  id Int @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  endpoint String @unique
+  p256dh String
+  auth String
+}

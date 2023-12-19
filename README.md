@@ -1,6 +1,6 @@
-# create-svelte
+# Notification POC
 
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte).
+POC for sending and receiving notification using Webpush
 
 ## Creating a project
 
@@ -19,6 +19,9 @@ npm create svelte@latest my-app
 Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
 
 ```bash
+# Run this command for initial setup
+npx prisma migrate dev
+
 npm run dev
 
 # or start the server and open the app in a new browser tab
