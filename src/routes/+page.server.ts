@@ -8,9 +8,11 @@ export const load = (async () => {
 	};
 }) satisfies PageServerLoad;
 
+const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
 export const actions = {
 	create: async () => {
-		console.log('called');
+		await sleep(1000);
 		await prisma.notification.create({
 			data: {
 				message: faker.lorem.paragraph()

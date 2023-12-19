@@ -1,40 +1,54 @@
 <script lang="ts">
+	import { browser } from '$app/environment';
 	export let data;
 
-	const notify = () => {
+	let canNotify = false;
+	let denied = false;
+
+	if (browser) {
 		if (!('Notification' in window)) {
-			// Check if the browser supports notifications
-			alert('This browser does not support desktop notification');
-		} else if (Notification.permission === 'granted') {
-			// Check whether notification permissions have already been granted;
-			// if so, create a notification
-			const notification = new Notification('Hi there!');
-			console.log('notification', notification);
-			// …
-		} else if (Notification.permission !== 'denied') {
-			// We need to ask the user for permission
-			Notification.requestPermission().then((permission) => {
-				// If the user accepts, let's create a notification
-				if (permission === 'granted') {
-					const notification = new Notification('Hi there!');
-					console.log('notification 2', notification);
-					// …
-				}
-			});
+			console.error('This browser does not support notification');
+		} else {
+			if (Notification.permission === 'granted') {
+				canNotify = true;
+			}
+
+			if (Notification.permission === 'denied') {
+				denied = true;
+			}
+		}
+	}
+
+	const notify = async () => {
+		const permission = await Notification.requestPermission();
+
+		if (permission === 'granted') {
+			canNotify = true;
+		}
+
+		if (permission === 'denied') {
+			denied = true;
 		}
 	};
-	$: console.log(data);
 </script>
 
 <h1>Notification POC</h1>
-<button>Get Notified!</button>
+
+{#if denied}
+	<p>We will not be sending you notifications, refresh the app and allow notifications</p>
+{/if}
+{#if !canNotify}
+	<button on:click={notify}>Allow site to notify you</button>
+{:else}
+	<button on:click={() => new Notification('Hello World')}>Send Notification</button>
+{/if}
+
 <form method="POST" action="?/create">
 	<button>Create Notification</button>
 </form>
 
 <div>
 	<h1>Notifications</h1>
-	<button on:click={notify}>Notify me!</button>
 	{#each data.notifications as notification (notification.id)}
 		<p>{notification.message}</p>
 	{/each}
